@@ -14,11 +14,6 @@ pipeline {
     }
 
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
         stage('Get Repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/Macple/Frontend'
@@ -46,14 +41,14 @@ pipeline {
                 }
             }
         }
-        stage('Send image to registry') {
+        stage('Push image to the registry') {
             steps {
                 script {
                     docker.withRegistry("${dockerRegistry}", "${registryCredentials}") {
                         // Wypchnij obraz z tagiem utworzonym w kroku budowania
-                        docker.image("${imageName}:${dockerTag}").push()
+                        applicationImage.push()
                         // Wypchnij obraz z tagiem 'latest'
-                        docker.image("${imageName}:${dockerTag}").push('latest')
+                        applicationImage.push('latest')
                     }
                 }
             }
